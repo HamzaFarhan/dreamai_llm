@@ -35,6 +35,6 @@ def run_llm(llm, prompt, template=None):
 
 async def arun_llm(llm, prompt, template=None):
     if template is None:
-        return await llm.arun(prompt)  # ["text"].strip()
+        return await llm.acall(prompt)  # ["text"].strip()
     chain = LLMChain(prompt=template, llm=llm)
-    return await chain.arun(prompt)  # ["text"].strip()
+    return await chain.acall(prompt)  # ["text"].strip()

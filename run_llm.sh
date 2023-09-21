@@ -1,5 +1,5 @@
 . parse_yaml.sh
-create_variables ../configs/ray_config.yaml
+create_variables ray_config.yaml
 
 model_name=$applications__deployments__user_config_model_name
 url=$applications__deployments__user_config_model_url

@@ -29,13 +29,34 @@ class AppIngress:
         self.model_name = config.get("model_name", self.MODEL_NAME)
         self.model_url = config.get("model_url", self.MODEL_URL)
 
-    async def ask(self, prompt):
+    def ask_sync(self, prompt):
         res = run_llm(self.llm, prompt, template=qna_template)
+        print(f"\nQuestion: {prompt}\nAnswer: {res}\n")
+        return res
+
+    def complete_sync(self, prompt):
+        res = run_llm(self.llm, prompt, template=complete_template)
+        print(f"\n{prompt} {res}\n")
+        return res
+
+    async def ask(self, prompt):
+        res = await arun_llm(self.llm, prompt, template=qna_template)
+        print(f"\nQuestion: {prompt}\nAnswer: {res}\n")
         return res
 
     async def complete(self, prompt):
-        res = run_llm(self.llm, prompt, template=complete_template)
+        res = await arun_llm(self.llm, prompt, template=complete_template)
+        print(f"\n{prompt} {res}\n")
         return res
+
+    @app.post("/bg_ask")
+    async def bg_task(
+        self,
+        question: str = Query(default="What is the meaning of life?"),
+        background_tasks: BackgroundTasks = BackgroundTasks(),
+    ):
+        background_tasks.add_task(self.ask, question)
+        return JSONResponse(content={"Task": "Task Running"})
 
     @app.post("/ask")
     async def ask_question(
