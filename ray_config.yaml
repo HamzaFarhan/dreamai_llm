@@ -24,8 +24,12 @@ applications:
     deployments:
       - name: AppIngress
         user_config:
-          model_name: facebook/opt-2.7b
-          model_url: http://localhost:8000/v1
+          redis_host: 127.0.0.1
+          redis_port: 6379
+          llm_config:
+            llm_fn: vllm
+            model_name: facebook/opt-2.7b
+            model_url: http://localhost:8000/v1
         autoscaling_config:
           min_replicas: 2
           initial_replicas: null

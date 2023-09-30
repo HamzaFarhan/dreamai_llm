@@ -5,5 +5,5 @@ qna_template = PromptTemplate.from_template(
 )
 
 complete_template = PromptTemplate.from_template(
-    "Complete this sentence and add [END] to the end and keep it short: {text}"
+    "Complete this sentence and add [END] to the end: {text}"
 )
