@@ -31,6 +31,6 @@ elif [ "$model_name" == "null" ]; then
     echo "Invalid model name. It must be a valid model name"
     echo "Model Name: $model_name"
 else
-    command="python -m vllm.entrypoints.openai.api_server --model $model_name --host $url --port $port --allow-credentials True"
+    command="python -m vllm.entrypoints.openai.api_server --model $model_name --host $url --port $port --allow-credentials "True""
     $command
 fi
