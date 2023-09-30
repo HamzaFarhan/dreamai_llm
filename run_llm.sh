@@ -6,7 +6,7 @@ create_variables ray_config.yaml
 llm_fn=${applications__deployments__user_config_llm_config_llm_fn:="null"}
 model_name=${applications__deployments__user_config_llm_config_model_name:="null"}
 url=${applications__deployments__user_config_llm_config_model_url:="http://localhost:8000/v1"}
-token=${applications__deployments__user_config_llm_config_model_token:="null"}
+# token=${applications__deployments__user_config_llm_config_model_token:="null"}
 
 # Extract the protocol, host, and port
 protocol=$(echo "$url" | awk -F '://' '{print $1}')
@@ -31,6 +31,6 @@ elif [ "$model_name" == "null" ]; then
     echo "Invalid model name. It must be a valid model name"
     echo "Model Name: $model_name"
 else
-    command="python -m vllm.entrypoints.openai.api_server --model $model_name --host $url --port $port --token $token"
+    command="python -m vllm.entrypoints.openai.api_server --model $model_name --host $url --port $port --allow-credentials true"
     $command
 fi
