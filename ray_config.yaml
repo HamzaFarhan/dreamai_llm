@@ -28,8 +28,8 @@ applications:
           redis_port: 6379
           llm_config:
             llm_fn: vllm
-            model_name: meta-llama/Llama-2-7b-chat-hf
-            # model_name: facebook/opt-2.7b
+            # model_name: meta-llama/Llama-2-7b-chat-hf
+            model_name: facebook/opt-2.7b
             model_url: http://localhost:8000/v1
         autoscaling_config:
           min_replicas: 2

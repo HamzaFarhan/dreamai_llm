@@ -7,11 +7,11 @@ def vllm_client(
     model_url="http://localhost:8000/v1",
     top_k=10,
     top_p=0.4,
-    max_tokens=64,
+    max_tokens=512,
     presence_penalty=0.4,
     frequency_penalty=0.6,
     length_penalty=0.7,
-    model_kwargs={"stop": ["[END]", "\n\n"]},
+    model_kwargs={"stop": ["[END]"]},
     **kwargs,
 ):
     return VLLMOpenAI(
