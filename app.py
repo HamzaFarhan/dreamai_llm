@@ -26,7 +26,7 @@ class AppIngress:
 
     def init_kv_store(self):
         self.kv_store = KeyValueStore(redis_host=self.redis_host, redis_port=self.redis_port)
-    
+
     def init_llm(self):
         if "llm_fn" not in self.llm_config:
             self.llm_config["llm_fn"] = None
@@ -35,7 +35,7 @@ class AppIngress:
             self.llm = llm_fn(**{k: v for k, v in self.llm_config.items() if k != "llm_fn"})
         else:
             self.llm = None
-    
+
     def set_up(self):
         self.init_kv_store()
         self.init_llm()
@@ -57,7 +57,7 @@ class AppIngress:
         input: str = Query(default="Hello Background Task!"),
         background_tasks: BackgroundTasks = BackgroundTasks(),
     ):
-        task_id = start_task()
+        task_id = start_task(self.kv_store)
         background_tasks.add_task(long_running_task, input=input)
         return JSONResponse(content={"Task": "Task Running"})
 
@@ -65,16 +65,27 @@ class AppIngress:
     async def ask_question(
         self, question: str = Query(default="What is the meaning of life?")
     ):
-        task_id = start_task()
+        task_id = start_task(self.kv_store)
         try:
             res = await async_ask_q(self.llm, question)
         except Exception as e:
             fail_task(task_id, self.kv_store, str(e))
         return JSONResponse(content={"Answer": res})
 
+    @app.post("/industry_problem")
+    async def industry_problem(self, problem: IndustryProblem):
+        task_id = start_task(self.kv_store)
+        try:
+            res = await async_run_llm(
+                self.llm, problem.dict(), template=industry_problem_template
+            )
+        except Exception as e:
+            fail_task(task_id, self.kv_store, str(e))
+        return JSONResponse(content={"Answer": res})
+
     @app.post("/analyze")
     async def analyze_team(self, team_data: Team):
-        task_id = start_task()
+        task_id = start_task(self.kv_store)
         try:
             prompt = f"Is {team_data.formation} a good formation for {team_data.name}?"
             res = await async_ask_q(self.llm, prompt)
